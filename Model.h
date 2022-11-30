@@ -8,6 +8,8 @@
 #include "PokemonGym.h"
 #include "View.h"
 
+#include "WildPokemon.h"
+
 using namespace std;
 
 class Model
@@ -23,6 +25,8 @@ class Model
     int num_centers;
     PokemonGym * gym_ptrs[10];
     int num_gyms;
+    WildPokemon* wildpokemon_ptrs[10];
+    int num_wildpokemon;
 
     public: 
 

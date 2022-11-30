@@ -5,8 +5,8 @@
 
 using namespace std;
 
-Trainer::Trainer()
-:GameObject('T')
+Trainer::Trainer(): 
+GameObject('T')
 {
     state = STOPPED;
     speed = 5;

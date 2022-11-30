@@ -12,8 +12,10 @@ Model::Model(){
     center_ptrs[0] = new PokemonCenter(1, 1, 100, Point2D(1,20));
     center_ptrs[1] = new PokemonCenter(2, 2, 200, Point2D(10,20));
 
-    gym_ptrs[0] = new PokemonGym(10, 1, 2.0, 3, 1, Point2D(0,0)); // CHANGE
+    gym_ptrs[0] = new PokemonGym(10, 1, 2.0, 3, 1, Point2D(0,0));
     gym_ptrs[1] = new PokemonGym(20, 5, 7.5, 4, 2, Point2D(5,5));
+
+    wildpokemon_ptrs[0] = new WildPokemon("Pikachu", )
 
 
     object_ptrs[0]=trainer_ptrs[0];
