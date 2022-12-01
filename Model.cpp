@@ -3,6 +3,9 @@
 
 using namespace std;
 
+int fainted_trainers=0;
+int passed_gyms=0; // count to see if all gyms are passed/ trainers dead
+
 Model::Model(){
     time = 0;
 
@@ -15,8 +18,9 @@ Model::Model(){
     gym_ptrs[0] = new PokemonGym(10, 1, 2.0, 3, 1, Point2D(0,0));
     gym_ptrs[1] = new PokemonGym(20, 5, 7.5, 4, 2, Point2D(5,5));
 
-    wildpokemon_ptrs[0] = new WildPokemon("Pikachu", )
-
+    wildpokemon_ptrs[0] = new WildPokemon("WildPokemon1", 5, 2, false, 1, Point2D(10, 12));
+    wildpokemon_ptrs[1] = new WildPokemon("WildPokemon2", 6, 3, false, 2, Point2D(15, 5));
+    // pokemon2 slightly stronger & tankier
 
     object_ptrs[0]=trainer_ptrs[0];
     object_ptrs[1]=trainer_ptrs[1];
@@ -24,11 +28,15 @@ Model::Model(){
     object_ptrs[3]=center_ptrs[1];
     object_ptrs[4]=gym_ptrs[0];
     object_ptrs[5]=gym_ptrs[1];
-    
-    num_objects = 6;
+    object_ptrs[6]=wildpokemon_ptrs[0];
+    object_ptrs[7]=wildpokemon_ptrs[1];    
+
+
+    num_objects = 8;
     num_trainers=2;
     num_centers=2;
     num_gyms=2;
+    num_wildpokemon = 2;
 
     cout << "Model default constructed"<<endl;
 }
@@ -72,8 +80,6 @@ bool Model::Update() {
     time++;
 
     bool update_check=false; // temp bool; false if no update is true
-    int passed_gyms=0; //temp count to see if all gyms are passed
-    int fainted_trainers=0;
 
     for (int i=0;i<num_objects;i++){
         if(object_ptrs[i]->Update())

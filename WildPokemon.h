@@ -5,7 +5,6 @@
 #include "Trainer.h"
 #include "GameObject.h"
 #include "Point2D.h"
-#include <string.h>
 
 using namespace std;
 
@@ -41,7 +40,7 @@ class WildPokemon : public GameObject
     bool Update();
     void ShowStatus();
     bool IsAlive();
-
+    bool ShouldBeVisible();
 
 
 };

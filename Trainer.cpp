@@ -20,6 +20,7 @@ GameObject('T')
     current_center=0;
     current_gym=0;
     //delta is assigned as needed in SetupDestination()
+    current_pokemon=0; // PA4
 
     cout << "Trainer default constructed" << endl;
 }
@@ -39,6 +40,8 @@ Trainer::Trainer(char in_code)
     current_center=0;
     current_gym=0;
 
+    current_pokemon=0; // PA4
+
     cout << "Trainer constructed" << endl;
 }
 
@@ -57,6 +60,9 @@ Trainer::Trainer(string in_name, int in_id, char in_code, unsigned int in_speed,
     potions_to_buy=0;
     current_center=0;
     current_gym=0;
+
+    current_pokemon=0; // PA4
+
 
     cout << "Trainer constructed" << endl;
 }
@@ -120,7 +126,7 @@ void Trainer::StartMovingToCenter(PokemonCenter* center){
 }
 
 void Trainer::StartBattling(unsigned int num_battles){
-    if (HasFainted()){
+    if (health==0){
         cout << display_code << id_num<<": My Pokemon have fainted so no more battles for me..." << endl;
     } else if (state != IN_GYM){
         cout << display_code << id_num<<": I can only battle in a PokemonGym!" << endl;
@@ -136,7 +142,7 @@ void Trainer::StartBattling(unsigned int num_battles){
 }
 
 void Trainer::StartRecoveringHealth(unsigned int num_potions){
-    if (HasFainted()){
+    if (health==0){
         cout<<display_code<<id_num<<": My Pokemon have fainted and can't drink any potions..." << endl;
     } else if (state != AT_CENTER){
         cout<<display_code<<id_num<<": I can only recover health at a Pokemon Center!" << endl; //CANNOT command to buy potions multiple times within 1 tick
@@ -226,7 +232,7 @@ void Trainer::ShowStatus(){
             cout<<" recovering health in PokemonCenter "<<current_center->GetId()<<endl;
             break;
 
-        case FAINTED: // SELF-ADDED - fits well and informs player 
+        case FAINTED: // SELF-ADDED - fits well and informs player that trainer currently fainted
             cout<<" fainted"<<endl;
             break;
     }
@@ -236,11 +242,11 @@ bool Trainer::Update(){
     //how trainer moves
     //can't move when fainted!
     if (HasFainted()){
-        cout<<name<<" is out of health and can't move!"<<endl; // map removes trainer before this is displayed, but 
+        cout<<"** " << name<<" is out of health and can't move! **"<<endl; // map removes trainer before this is displayed, but 
             //since Update() is scarcely called, believe this is expected behavior
         state = FAINTED;
         return false;
-    } 
+    }
 
     switch (state)  {
         case MOVING:
@@ -318,11 +324,22 @@ bool Trainer::UpdateLocation(){
         return true;
     } else {
         location=location+delta; //can't use += operator since we didn't overload that!
+
         health-=1;//battling pokemon in tall grass with each step!
         PokeDollars+=GetRandomAmountOfPokeDollars();
         cout <<display_code <<id_num<<": step..."<<endl;
         return false;
     }
+
+    if (current_pokemon) { // if trainer has a current_pokemon
+            current_pokemon->follow(this);
+            health-=current_pokemon->get_attack(); // trainer hp goes down by pokemon's attack each step
+    } else if (fabs(destination.x-location.x)<=fabs(delta.x) && fabs(destination.y-location.y)<=fabs(delta.y)){ // pokemon follows if close.. how?
+
+
+    }
+
+
 }
 
 static double GetRandomAmountOfPokeDollars(){
@@ -330,3 +347,15 @@ static double GetRandomAmountOfPokeDollars(){
 
     return (((double)rand())/ RAND_MAX)*2.0; // random double between 0.0 and 2.0
 }
+
+
+
+
+
+// void Trainer::Encounter(WildPokemon* p){ // lose 1 hp every turn per attack value
+//     static int damageTaken = 0;
+
+//     if (damageTaken < p->get_attack())
+//         health--;
+//         experience++;
+// }

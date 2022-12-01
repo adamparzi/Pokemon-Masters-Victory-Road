@@ -70,7 +70,7 @@ using namespace std;
             state = DEFEATED;
             display_code = 'g';
             
-            cout << display_code << id_num << " has been beaten" << endl;
+            cout <<"** "<< display_code << id_num << " has been beaten **" << endl;
             return true;
         } else {
             return false;

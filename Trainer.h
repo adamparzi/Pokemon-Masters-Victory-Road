@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "PokemonGym.h"
 #include "PokemonCenter.h"
+#include "WildPokemon.h"
 
 using namespace std;
 
@@ -68,6 +69,11 @@ class Trainer : public GameObject
     PokemonGym* current_gym;
     Point2D destination;
     Vector2D delta;
+
+    WildPokemon* current_pokemon; //pa4
+
+
+
 };
 
 static double GetRandomAmountOfPokeDollars(); // states static, but doesnt specify it in example header...

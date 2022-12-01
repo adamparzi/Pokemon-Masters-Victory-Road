@@ -37,6 +37,7 @@ class Model
     Trainer * GetTrainerPtr(int id);
     PokemonCenter * GetPokemonCenterPtr(int id);
     PokemonGym * GetPokemonGymPtr(int id);
+    WildPokemon * GetWildPokemonPtr(int id);
     bool Update();
     void Display(View &view); //View created later
     void ShowStatus();
