@@ -121,8 +121,6 @@ bool Model::Update()
             cout << "GAME OVER: You lose! All of your Trainers' Pokemon have fainted!" << endl;
             exit(0);
         }
-
-        return update_check;
     }
 
     // PA4 - if any trainers are near a pokemon, pokemon should follow them
@@ -134,10 +132,15 @@ bool Model::Update()
         {
             Point2D pokemon_loc = wildpokemon_ptrs[j]->GetLocation();
 
-            if (fabs(pokemon_loc.x - trainer_loc.x) <= 4 || fabs(pokemon_loc.y - trainer_loc.y) <= 4)
-                wildpokemon_ptrs[j]->follow(trainer_ptrs[i]);
+            if (fabs(pokemon_loc.x - trainer_loc.x) <= 2 && fabs(pokemon_loc.y - trainer_loc.y) <= 2 && wildpokemon_ptrs[j]->IsAlive())
+            {
+                wildpokemon_ptrs[j]->follow(trainer_ptrs[i]);     // gives pokemon a current_trainer
+                trainer_ptrs[i]->setPokemon(wildpokemon_ptrs[j]); // gives trainer a current_pokemon
+            }
         }
     }
+
+    return update_check;
 }
 
 void Model::Display(View &view)

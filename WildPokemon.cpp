@@ -27,6 +27,7 @@ void WildPokemon::follow(Trainer *t)
     if (IsAlive() && !current_trainer)
     {
         current_trainer = t;
+        location = current_trainer->GetLocation(); // set it initially to be quick
     }
 }
 bool WildPokemon::get_variant()
@@ -48,36 +49,42 @@ bool WildPokemon::get_in_combat()
 
 bool WildPokemon::IsAlive()
 {
-    if (health == 0)
-        return false;
-    else
+    if (health > 0)
         return true;
-}
-
-void WildPokemon::TakeDamage()
-{
-    health--;
+    return false;
 }
 
 bool WildPokemon::Update()
 {
-    if (!IsAlive() && state != DEAD)
+
+    if (!IsAlive() && state != DEAD) // if dead AND dead state hasn't been assigned
     {
         cout << "** " << name << " has fainted! **" << endl;
         state = DEAD;
         id_num = 'w';
         in_combat = false;
+        current_trainer = 0;
         return true;
     }
-    else if (current_trainer && state != IN_TRAINER) // if trainer is assigned, and wasn't already assigned
-    {                                                // NULL trainer pointer returns false!
+
+    if (!IsAlive()) // state must be DEAD
+        return false;
+
+    if (current_trainer && state != IN_TRAINER) // if trainer is assigned, and wasn't already assigned
+    {                                           // NULL trainer pointer returns false!
         cout << "** " << name << " is following " << current_trainer->GetName() << " **" << endl;
         state = IN_TRAINER;
         in_combat = true;
         return true;
     }
-    else
-        return false;
+
+    if (current_trainer) // state must be IN_TRAINER
+    {
+        location = current_trainer->GetLocation();
+        health--; // pokemon hp goes down by 1 each step
+    }
+
+    return false;
 }
 
 void WildPokemon::ShowStatus()
@@ -88,14 +95,16 @@ void WildPokemon::ShowStatus()
     cout << "Health: " << health << endl;
     cout << "Attack damage: " << attack << endl;
 
+    if (!IsAlive())
+    {
+        cout << " fainted" << endl; // want immediate update
+        return;
+    }
+
     switch (state)
     {
     case IN_ENVIRONMENT:
         cout << " currently hiding in tall grass" << endl;
-        break;
-
-    case DEAD:
-        cout << " fainted" << endl;
         break;
 
     case IN_TRAINER: // same thing as in_combat?

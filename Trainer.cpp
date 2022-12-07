@@ -226,6 +226,11 @@ bool Trainer::ShouldBeVisible()
         return false;
 }
 
+void Trainer::setPokemon(WildPokemon *pokemon)
+{
+    current_pokemon = pokemon;
+}
+
 void Trainer::ShowStatus()
 {
     cout << name << " status: " << endl;
@@ -288,20 +293,25 @@ bool Trainer::Update()
         return false;
     }
 
+    // if (current_pokemon && !(current_pokemon->IsAlive())) // if trainer has a DEAD pokemon, no longer has one
+    //     current_pokemon = 0;
+
+    if (current_pokemon)
+    {
+        this->health -= current_pokemon->get_attack(); // trainer hp goes down by pokemon's attack each step
+        cout << "** " << name << " took " << current_pokemon->get_attack() << " damage! **" << endl;
+    }
+
     switch (state)
     {
     case MOVING:
+
         if (UpdateLocation())
         { // returns true when arrived to dest AND assigns loc=dest
             Stop();
             return true;
         }
 
-        if (current_pokemon)
-        {
-            health -= current_pokemon->get_attack(); // trainer hp goes down by pokemon's attack each step
-            current_pokemon->TakeDamage();           // pokemon hp goes down by 1 each step
-        }
         return false;
 
         break;
@@ -318,11 +328,6 @@ bool Trainer::Update()
             return true;
         }
 
-        if (current_pokemon)
-        {
-            health -= current_pokemon->get_attack();
-            current_pokemon->TakeDamage();
-        }
         return false;
 
         break;
@@ -335,11 +340,6 @@ bool Trainer::Update()
             return true;
         }
 
-        if (current_pokemon)
-        {
-            health -= current_pokemon->get_attack();
-            current_pokemon->TakeDamage();
-        }
         return false;
 
         break;
@@ -407,11 +407,3 @@ static double GetRandomAmountOfPokeDollars()
 
     return (((double)rand()) / RAND_MAX) * 2.0; // random double between 0.0 and 2.0
 }
-
-// void Trainer::Encounter(WildPokemon* p){ // lose 1 hp every turn per attack value
-//     static int damageTaken = 0;
-
-//     if (damageTaken < p->get_attack())
-//         health--;
-//         experience++;
-// }

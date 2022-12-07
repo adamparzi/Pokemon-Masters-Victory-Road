@@ -41,7 +41,7 @@ public:
     void ShowStatus();
     bool IsAlive();
     bool ShouldBeVisible();
-    void TakeDamage();
+    // void TakeDamage();
 };
 
 // #endif

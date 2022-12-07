@@ -50,7 +50,7 @@ public:
     void ShowStatus();
     bool Update();
 
-    // need GameCommands to be friends to access name
+    void setPokemon(WildPokemon *pokemon); // PA4
 
     string GetName(); // SELF-IMPLEMENTED getter for name for Model
 
