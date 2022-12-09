@@ -11,6 +11,7 @@
 
 #include <list>
 #include "WildPokemon.h"
+#include "Invalid_Input.h"
 
 using namespace std;
 
@@ -43,6 +44,7 @@ public:
     bool Update();
     void Display(View &view); // View created later
     void ShowStatus();
+    void NewCommand(char type, int id, double x, double y);
 };
 
 // #endif

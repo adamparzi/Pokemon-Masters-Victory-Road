@@ -104,15 +104,6 @@ bool Model::Update()
         }
     }
 
-    for (list<GameObject *>::iterator iter = active_ptrs.begin(); iter != active_ptrs.end(); iter++)
-    { // when its not on the grid, it's not an active pointer
-        if (!(*iter)->ShouldBeVisible())
-        {
-            active_ptrs.erase(iter);
-            cout << "Dead object removed" << endl;
-        }
-    }
-
     for (list<PokemonGym *>::iterator iter = gym_ptrs.begin(); iter != gym_ptrs.end(); iter++)
     {
         if ((*iter)->passed())
@@ -158,6 +149,15 @@ bool Model::Update()
         }
     }
 
+    for (list<GameObject *>::iterator iter = active_ptrs.begin(); iter != active_ptrs.end(); iter++)
+    { // when its not on the grid, it's not an active pointer
+        if (!(*iter)->ShouldBeVisible())
+        {
+            active_ptrs.erase(iter);
+            cout << "Dead object removed" << endl;
+        }
+    }
+
     return update_check;
 }
 
@@ -176,8 +176,98 @@ void Model::ShowStatus()
     cout << "Time: " << time << endl;
     cout << "--- Object Statuses ---" << endl;
 
-    for (list<GameObject *>::iterator iter = active_ptrs.begin(); iter != active_ptrs.end(); iter++)
+    for (list<GameObject *>::iterator iter = object_ptrs.begin(); iter != object_ptrs.end(); iter++)
     {
         (*iter)->ShowStatus();
+    }
+}
+
+// PA4
+void Model::NewCommand(char type, int id, double x, double y)
+{
+    if (type != 'c' && type != 'g' && type != 't' && type != 'w')
+    {
+        throw Invalid_Input("Bad new object command.");
+    }
+
+    if (id > 9)
+    {
+        throw Invalid_Input("ID can't be greater than 9");
+    }
+
+    switch (type)
+    {
+    case 'c':
+    {
+        for (list<PokemonCenter *>::iterator iter = center_ptrs.begin(); iter != center_ptrs.end(); iter++)
+        {
+            if (id == (*iter)->GetId())
+                throw Invalid_Input("Invalid center ID.");
+        }
+
+        PokemonCenter *C = new PokemonCenter(id, 1, 100, Point2D(x, y));
+
+        active_ptrs.push_back(C);
+        center_ptrs.push_back(C);
+        object_ptrs.push_back(C);
+
+        cout << "New center created." << endl;
+        break;
+    }
+
+    case 'g':
+    {
+        for (list<PokemonGym *>::iterator iter = gym_ptrs.begin(); iter != gym_ptrs.end(); iter++)
+        {
+            if (id == (*iter)->GetId())
+                throw Invalid_Input("Invalid gym ID.");
+        }
+
+        PokemonGym *G = new PokemonGym(10, 1, 2, 1, id, Point2D(x, y));
+
+        active_ptrs.push_back(G);
+        gym_ptrs.push_back(G);
+        object_ptrs.push_back(G);
+
+        cout << "New gym created." << endl;
+        break;
+    }
+
+    case 't':
+    {
+        for (list<Trainer *>::iterator iter = trainer_ptrs.begin(); iter != trainer_ptrs.end(); iter++)
+        {
+            if (id == (*iter)->GetId())
+                throw Invalid_Input("Invalid trainer ID.");
+        }
+        Trainer *T = new Trainer("Joy", id, 'T', 1, Point2D(x, y));
+
+        object_ptrs.push_back(T);
+        trainer_ptrs.push_back(T);
+        active_ptrs.push_back(T);
+
+        cout << "New trainer created." << endl;
+        break;
+    }
+
+    case 'w':
+    {
+        for (list<WildPokemon *>::iterator iter = wildpokemon_ptrs.begin(); iter != wildpokemon_ptrs.end(); iter++)
+        {
+            if (id == (*iter)->GetId())
+                throw Invalid_Input("Invalid wild pokemon ID.");
+        }
+        WildPokemon *W = new WildPokemon("Summoned Pokemon", 3, 5, false, id, Point2D(x, y));
+
+        object_ptrs.push_back(W);
+        wildpokemon_ptrs.push_back(W);
+        active_ptrs.push_back(W);
+
+        cout << "New wild pokemon created." << endl;
+        break;
+    }
+
+    default:
+        cout << "Unknown command." << endl;
     }
 }

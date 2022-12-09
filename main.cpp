@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream> // for filestream, reading and writing to file
 #include <cmath>
 #include <time.h>
 #include <stdlib.h>
@@ -11,13 +10,15 @@
 #include "Model.h"
 #include "GameCommand.h"
 #include "View.h"
+#include "Invalid_Input.h"
 
 using namespace std;
 
 Model model;
 View view;
 
-int main() {
+int main()
+{
     char command = ' ';
     int trainer_id;
     int gym_id;
@@ -25,60 +26,90 @@ int main() {
     Point2D p1;
     unsigned int num_battles;
     unsigned int num_potions;
+    unsigned int xnum;
+    unsigned int ynum;
+    char type;
+    int new_id;
 
     view.Clear(); // erases previous objects, if there were any
 
     model.Display(view); // shows time, all statuses, and sets all objects positions
-    view.Draw(); // draws grid and object positions
+    view.Draw();         // draws grid and object positions
 
-    while (command != 'q') { // kinda arbitrary - should quit before reaching back  
+    while (command != 'q') // kinda arbitrary - should quit before reaching back
+    {
         cout << "Enter command:" << endl;
-        cin >> command;
-
-        switch (command) // calls a function for appropriate command
+        if (!(cin >> command))
+            throw Invalid_Input("Bad command input");
+        try
         {
+            switch (command) // calls a function for appropriate command
+            {
             case 'm':
-                cin >> trainer_id >> p1.x >> p1.y;  //requests ADDITIONAL input from user
-                DoMoveCommand(model, trainer_id, p1); //carries out command
-            break;
+                if (!(cin >> trainer_id >> p1.x >> p1.y))
+                    throw Invalid_Input("Bad move command");
+
+                DoMoveCommand(model, trainer_id, p1); // carries out command
+                break;
 
             case 'c':
-                cin >> trainer_id >> center_id;
+                if (!(cin >> trainer_id >> center_id))
+                    throw Invalid_Input("Bad move to center command");
+
                 DoMoveToCenterCommand(model, trainer_id, center_id);
-            break;
+                break;
 
             case 'g':
-                cin >> trainer_id >> gym_id;
+                if (!(cin >> trainer_id >> gym_id))
+                    throw Invalid_Input("Bad move to gym command");
+
                 DoMoveToGymCommand(model, trainer_id, gym_id);
-            break;
+                break;
 
             case 's':
-                cin >> trainer_id;
+                if (!(cin >> trainer_id))
+                    throw Invalid_Input("Bad stop command");
+
                 DoStopCommand(model, trainer_id);
-            break;
+                break;
 
             case 'p':
-                cin >> trainer_id >> num_potions;
+                if (!(cin >> trainer_id >> num_potions))
+                    throw Invalid_Input("Bad buy potion command");
+
                 DoRecoverInCenterCommand(model, trainer_id, num_potions);
-            break;
+                break;
 
             case 'b':
-                cin >> trainer_id >> num_battles;
+                if (!(cin >> trainer_id >> num_battles))
+                    throw Invalid_Input("Bad battle command");
+
                 DoBattleCommand(model, trainer_id, num_battles);
-            break;
+                break;
 
             case 'a':
                 DoAdvanceCommand(model, view);
-            break;
+                break;
 
             case 'r':
                 DoRunCommand(model, view);
-            break;
+                break;
 
             case 'q':
                 exit(0);
-            break;
+                break;
+
+            case 'n':
+                if (!(cin >> type >> new_id >> xnum >> ynum))
+                    throw Invalid_Input("Bad new object command");
+                model.NewCommand(type, new_id, xnum, ynum);
+                break;
+            }
+        }
+        catch (Invalid_Input &except)
+        {
+            cout << "Invalid input - " << except.msg_ptr << endl;
+            // actions to be taken if the input is wrong
         }
     }
-
 }

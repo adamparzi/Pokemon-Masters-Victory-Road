@@ -56,12 +56,10 @@ bool WildPokemon::IsAlive()
 
 bool WildPokemon::Update()
 {
-
     if (!IsAlive() && state != DEAD) // if dead AND dead state hasn't been assigned
     {
         cout << "** " << name << " has fainted! **" << endl;
         state = DEAD;
-        id_num = 'w';
         in_combat = false;
         current_trainer = 0;
         return true;
