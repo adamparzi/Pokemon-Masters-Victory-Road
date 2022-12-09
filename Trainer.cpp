@@ -286,20 +286,32 @@ bool Trainer::Update()
 {
     // how trainer moves
     // can't move when fainted!
-    if (HasFainted())
+
+    if (current_pokemon && !(current_pokemon->IsAlive()))
+    {
+        current_pokemon = 0;
+    }
+
+    if (current_pokemon) // if potentially dying to current pokemon
+    {
+
+        if (health - current_pokemon->get_attack() < 0)
+        {
+            cout << "** " << name << " took " << health << " damage! **" << endl;
+            cout << "** " << name << " is out of health and can't move! **" << endl;
+            state = FAINTED;
+        }
+        else
+        {
+            health -= current_pokemon->get_attack(); // trainer hp goes down by pokemon's attack each step
+            cout << "** " << name << " took " << current_pokemon->get_attack() << " damage! **" << endl;
+        }
+    }
+    else if (HasFainted()) // else normal case, dying while walking
     {
         cout << "** " << name << " is out of health and can't move! **" << endl;
         state = FAINTED;
         return false;
-    }
-
-    // if (current_pokemon && !(current_pokemon->IsAlive())) // if trainer has a DEAD pokemon, no longer has one
-    //     current_pokemon = 0;
-
-    if (current_pokemon)
-    {
-        this->health -= current_pokemon->get_attack(); // trainer hp goes down by pokemon's attack each step
-        cout << "** " << name << " took " << current_pokemon->get_attack() << " damage! **" << endl;
     }
 
     switch (state)

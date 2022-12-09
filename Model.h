@@ -9,6 +9,7 @@
 #include "PokemonGym.h"
 #include "View.h"
 
+#include <list>
 #include "WildPokemon.h"
 
 using namespace std;
@@ -17,15 +18,17 @@ class Model
 {
 private:
     int time;
-    GameObject *object_ptrs[10];
+    list<GameObject *> object_ptrs;
+    list<GameObject *> active_ptrs;
     int num_objects;
-    Trainer *trainer_ptrs[10];
+    list<Trainer *> trainer_ptrs;
     int num_trainers;
-    PokemonCenter *center_ptrs[10];
+    list<PokemonCenter *> center_ptrs;
     int num_centers;
-    PokemonGym *gym_ptrs[10];
+    list<PokemonGym *> gym_ptrs;
     int num_gyms;
-    WildPokemon *wildpokemon_ptrs[10];
+
+    list<WildPokemon *> wildpokemon_ptrs;
     int num_wildpokemon;
 
 public:
@@ -36,7 +39,7 @@ public:
     Trainer *GetTrainerPtr(int id);
     PokemonCenter *GetPokemonCenterPtr(int id);
     PokemonGym *GetPokemonGymPtr(int id);
-    WildPokemon *GetWildPokemonPtr(int id);
+    // WildPokemon *GetWildPokemonPtr(int id);
     bool Update();
     void Display(View &view); // View created later
     void ShowStatus();

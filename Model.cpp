@@ -10,29 +10,41 @@ Model::Model()
 {
     time = 0;
 
-    trainer_ptrs[0] = new Trainer("Ash", 1, 'T', 1, Point2D(5, 1));
-    trainer_ptrs[1] = new Trainer("Misty", 2, 'T', 2, Point2D(10, 1));
+    Trainer *T1 = new Trainer("Ash", 1, 'T', 2, Point2D(5, 1));
+    Trainer *T2 = new Trainer("Misty", 2, 'T', 1, Point2D(10, 1));
 
-    center_ptrs[0] = new PokemonCenter(1, 1, 100, Point2D(1, 20));
-    center_ptrs[1] = new PokemonCenter(2, 2, 200, Point2D(10, 20));
+    PokemonCenter *C1 = new PokemonCenter(1, 1, 100, Point2D(1, 20));
+    PokemonCenter *C2 = new PokemonCenter(2, 2, 200, Point2D(10, 20));
 
-    gym_ptrs[0] = new PokemonGym(10, 1, 2.0, 3, 1, Point2D(0, 0));
-    gym_ptrs[1] = new PokemonGym(20, 5, 7.5, 4, 2, Point2D(5, 5));
+    PokemonGym *G1 = new PokemonGym(10, 1, 2, 3, 1, Point2D(0, 0));
+    PokemonGym *G2 = new PokemonGym(20, 5, 7.5, 4, 2, Point2D(5, 5));
 
-    wildpokemon_ptrs[0] = new WildPokemon("WildPokemon1", 5, 2, false, 1, Point2D(10, 12));
-    wildpokemon_ptrs[1] = new WildPokemon("WildPokemon2", 6, 3, false, 2, Point2D(15, 5));
+    WildPokemon *W1 = new WildPokemon("WildPokemon1", 5, 2, false, 1, Point2D(10, 12));
+    WildPokemon *W2 = new WildPokemon("WildPokemon2", 6, 3, false, 2, Point2D(15, 5));
     // pokemon2 slightly stronger & tankier
 
-    object_ptrs[0] = trainer_ptrs[0];
-    object_ptrs[1] = trainer_ptrs[1];
-    object_ptrs[2] = center_ptrs[0];
-    object_ptrs[3] = center_ptrs[1];
-    object_ptrs[4] = gym_ptrs[0];
-    object_ptrs[5] = gym_ptrs[1];
-    object_ptrs[6] = wildpokemon_ptrs[0];
-    object_ptrs[7] = wildpokemon_ptrs[1];
+    object_ptrs.push_back(T1); // all 4 object types
+    object_ptrs.push_back(T2);
+    object_ptrs.push_back(C1);
+    object_ptrs.push_back(C2);
+    object_ptrs.push_back(G1);
+    object_ptrs.push_back(G2);
+    object_ptrs.push_back(W1);
+    object_ptrs.push_back(W2);
+
+    trainer_ptrs.push_back(T1); // all 4 object types
+    trainer_ptrs.push_back(T2);
+    center_ptrs.push_back(C1);
+    center_ptrs.push_back(C2);
+    gym_ptrs.push_back(G1);
+    gym_ptrs.push_back(G2);
+    wildpokemon_ptrs.push_back(W1);
+    wildpokemon_ptrs.push_back(W2);
+
+    active_ptrs.assign(object_ptrs.begin(), object_ptrs.end());
 
     num_objects = 8;
+
     num_trainers = 2;
     num_centers = 2;
     num_gyms = 2;
@@ -43,64 +55,67 @@ Model::Model()
 
 Model::~Model()
 {
-    for (int i = 0; i < num_objects; i++)
+    for (list<GameObject *>::iterator iter = object_ptrs.begin(); iter != object_ptrs.end(); iter++) // iterating over list
     {
-        delete object_ptrs[i];
+        delete *iter;
     }
     cout << "Model destructed" << endl;
 }
 
 Trainer *Model::GetTrainerPtr(int id)
 {
-    for (int i = 0; i < num_trainers; i++)
+    for (list<Trainer *>::iterator iter = trainer_ptrs.begin(); iter != trainer_ptrs.end(); iter++)
     {
-        if (trainer_ptrs[i]->GetId() == id)
-        {
-            return trainer_ptrs[i];
-            break;
-        }
+        if ((*iter)->GetId() == id)
+            return *iter;
     }
     return 0; // return the null pointer if no id is matched
 }
 PokemonCenter *Model::GetPokemonCenterPtr(int id)
 {
-    for (int i = 0; i < num_centers; i++)
+    for (list<PokemonCenter *>::iterator iter = center_ptrs.begin(); iter != center_ptrs.end(); iter++)
     {
-        if (center_ptrs[i]->GetId() == id)
-        {
-            return center_ptrs[i];
-            break;
-        }
+        if ((*iter)->GetId() == id)
+            return *iter;
     }
     return 0;
 }
 PokemonGym *Model::GetPokemonGymPtr(int id)
 {
-    for (int i = 0; i < num_gyms; i++)
+    for (list<PokemonGym *>::iterator iter = gym_ptrs.begin(); iter != gym_ptrs.end(); iter++)
     {
-        if (gym_ptrs[i]->GetId() == id)
-        {
-            return gym_ptrs[i];
-            break;
-        }
+        if ((*iter)->GetId() == id)
+            return *iter;
     }
     return 0;
 }
+
 bool Model::Update()
 {
     time++;
 
     bool update_check = false; // temp bool; false if no update is true
 
-    for (int i = 0; i < num_objects; i++)
+    for (list<GameObject *>::iterator iter = active_ptrs.begin(); iter != active_ptrs.end(); iter++)
     {
-        if (object_ptrs[i]->Update())
+        if ((*iter)->Update())
+        {
             update_check = true; // turns true when ANY update is true
+        }
     }
 
-    for (int i = 0; i < num_gyms; i++)
+    for (list<GameObject *>::iterator iter = active_ptrs.begin(); iter != active_ptrs.end(); iter++)
+    { // when its not on the grid, it's not an active pointer
+        if (!(*iter)->ShouldBeVisible())
+        {
+            active_ptrs.erase(iter);
+            cout << "Dead object removed" << endl;
+        }
+    }
+
+    for (list<PokemonGym *>::iterator iter = gym_ptrs.begin(); iter != gym_ptrs.end(); iter++)
     {
-        if (gym_ptrs[i]->passed())
+        if ((*iter)->passed())
             passed_gyms++;
     }
 
@@ -110,32 +125,35 @@ bool Model::Update()
         exit(0); // successful termination of program
     }
 
-    for (int i = 0; i < num_trainers; i++)
+    for (list<Trainer *>::iterator iter = trainer_ptrs.begin(); iter != trainer_ptrs.end(); iter++)
     {
 
-        if (trainer_ptrs[i]->HasFainted())
+        if ((*iter)->HasFainted())
             fainted_trainers++;
 
         if (fainted_trainers == num_trainers)
         {
             cout << "GAME OVER: You lose! All of your Trainers' Pokemon have fainted!" << endl;
+            cout << "Fainted trainers: " << fainted_trainers << endl;
+            cout << "Num trainers: " << num_trainers << endl;
+
             exit(0);
         }
     }
 
     // PA4 - if any trainers are near a pokemon, pokemon should follow them
-    for (int i = 0; i < num_wildpokemon; i++) // works for same number of pokemon as trainers - good enough for game current balance
+    for (list<Trainer *>::iterator iter = trainer_ptrs.begin(); iter != trainer_ptrs.end(); iter++)
     {
-        Point2D trainer_loc = trainer_ptrs[i]->GetLocation();
+        Point2D trainer_loc = (*iter)->GetLocation();
 
-        for (int j = 0; j < num_wildpokemon; j++) // check each combination (really checking each permutation, same behavior)
+        for (list<WildPokemon *>::iterator pokemon_iter = wildpokemon_ptrs.begin(); pokemon_iter != wildpokemon_ptrs.end(); pokemon_iter++)
         {
-            Point2D pokemon_loc = wildpokemon_ptrs[j]->GetLocation();
+            Point2D pokemon_loc = (*pokemon_iter)->GetLocation();
 
-            if (fabs(pokemon_loc.x - trainer_loc.x) <= 2 && fabs(pokemon_loc.y - trainer_loc.y) <= 2 && wildpokemon_ptrs[j]->IsAlive())
+            if (fabs(pokemon_loc.x - trainer_loc.x) <= 2 && fabs(pokemon_loc.y - trainer_loc.y) <= 2 && (*pokemon_iter)->IsAlive())
             {
-                wildpokemon_ptrs[j]->follow(trainer_ptrs[i]);     // gives pokemon a current_trainer
-                trainer_ptrs[i]->setPokemon(wildpokemon_ptrs[j]); // gives trainer a current_pokemon
+                (*pokemon_iter)->follow(*iter);     // gives pokemon a current_trainer
+                (*iter)->setPokemon(*pokemon_iter); // gives trainer a current_pokemon
             }
         }
     }
@@ -147,20 +165,19 @@ void Model::Display(View &view)
 {
     Model::ShowStatus(); // starts by displaying current time and status
 
-    for (int i = 0; i < num_objects; i++)
+    for (list<GameObject *>::iterator iter = active_ptrs.begin(); iter != active_ptrs.end(); iter++)
     {
-        view.Plot(object_ptrs[i]);
+        view.Plot(*iter);
     }
-
-} // View created later
+}
 
 void Model::ShowStatus()
 {
     cout << "Time: " << time << endl;
     cout << "--- Object Statuses ---" << endl;
 
-    for (int i = 0; i < num_objects; i++)
+    for (list<GameObject *>::iterator iter = active_ptrs.begin(); iter != active_ptrs.end(); iter++)
     {
-        object_ptrs[i]->ShowStatus();
+        (*iter)->ShowStatus();
     }
 }
