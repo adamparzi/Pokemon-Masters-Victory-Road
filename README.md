@@ -17,7 +17,7 @@ Instructions:
 
 # Commands
 
-  m ID x y - "move": command Trainer ID to move to location (x, y)
+  m ID x y - "move": command Trainer ID to move to location (x, y) - only use number (not 'T1', but 1)
   
   c ID1 ID2 - "move towards a PokemonCenter”: command Trainer ID1 to start heading to
   PokemonCenter ID2.
