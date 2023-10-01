@@ -17,8 +17,6 @@ Instructions:
 
 ## Commands
 
-Basic commands:
-
 ● m ID x y - "move": command Trainer ID to move to location (x, y)
 ● c ID1 ID2 - "move towards a PokemonCenter”: command Trainer ID1 to start heading to
 PokemonCenter ID2.
@@ -37,11 +35,12 @@ been done.
 
 Implement a new command:
   n TYPE ID X Y- create a new object with the specified TYPE, ID number, (X, Y) location
+  
   TYPE is a one letter abbreviation for the type of object:
-  ● c – PokemonCenter
-  ● g – PokemonGYM
-  ● t – Trainer
-  ● w – WildPokemon
+  c – PokemonCenter
+  g – PokemonGYM
+  t – Trainer
+  w – WildPokemon
 
-S filename - Save the game in the file specified.
-R filename - Restore the game using the file specified.
+  S filename - Save the game in the file specified.
+  R filename - Restore the game using the file specified.
