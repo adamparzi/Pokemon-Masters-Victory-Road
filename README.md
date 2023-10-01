@@ -15,7 +15,7 @@ others by seeing who completes all the gyms the fastest.
 Instructions:
   Download and run PA4.exe, or run 'make' and ./PA4 to play!
 
-## Commands
+# Commands
 
   m ID x y - "move": command Trainer ID to move to location (x, y)
   
@@ -41,7 +41,11 @@ Instructions:
   
   q - "quit": terminate the program
 
-Implement a new command:
+  S filename - Save the game in the file specified.
+  
+  R filename - Restore the game using the file specified.
+
+## Implement a new command:
   n TYPE ID X Y- create a new object with the specified TYPE, ID number, (X, Y) location
   
   TYPE is a one letter abbreviation for the type of object:
@@ -53,7 +57,3 @@ Implement a new command:
   t – Trainer
   
   w – WildPokemon
-
-  S filename - Save the game in the file specified.
-  
-  R filename - Restore the game using the file specified.
