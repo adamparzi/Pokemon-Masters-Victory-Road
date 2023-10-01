@@ -1,9 +1,9 @@
 # Pokemon Masters: Victory Road
 
 Pokemon Masters is the cumulative, solo final project in Professor Densmore's EC327 software engineering course. It uses fundamental OOP principles (Abstraction, Encapsulation, Inheritance, Polymorphism) to its fullest extent, 
-while incorporating makefiles, state machine logic, and version control through Github.
+while incorporating makefiles, state machine logic, and version control through git.
 
-Project assignment instructions are included as PDFs. 
+PA4 is the second half of the base game, PA3. PA4 adds error-checking and subtle mechanics, such as pokemon movement in the brush. Specific details for the whole project can be found on the included project assignment instruction PDFs. 
 
 How to Play:
 You are a Pokemon Trainer. You are trying to defeat the gyms but you need your Pokemon to
