@@ -45,6 +45,7 @@ Implement a new command:
   n TYPE ID X Y- create a new object with the specified TYPE, ID number, (X, Y) location
   
   TYPE is a one letter abbreviation for the type of object:
+  
   c – PokemonCenter
   
   g – PokemonGym
