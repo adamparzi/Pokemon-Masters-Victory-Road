@@ -46,9 +46,13 @@ Implement a new command:
   
   TYPE is a one letter abbreviation for the type of object:
   c – PokemonCenter
+  
   g – PokemonGym
+  
   t – Trainer
+  
   w – WildPokemon
 
   S filename - Save the game in the file specified.
+  
   R filename - Restore the game using the file specified.
